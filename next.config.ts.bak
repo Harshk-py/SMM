@@ -1,0 +1,10 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  experimental: {
+    // 🚫 remove allowedDevOrigins, it’s not supported in stable Next 15
+  },
+};
+
+export default nextConfig;

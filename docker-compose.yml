@@ -1,0 +1,41 @@
+services:
+  app:
+    container_name: smm-app
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "3001:3000" # host:container → app will be on http://localhost:3001
+    depends_on:
+      - db
+    restart: unless-stopped
+    # run the Next.js production server
+    command: ["sh", "-c", "npm run start"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  db:
+    container_name: smm-db
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-appdb}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+
+volumes:
+  pgdata:

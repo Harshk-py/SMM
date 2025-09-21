@@ -1,0 +1,339 @@
+/* Tailwind v4 entry */
+@import "tailwindcss";
+
+/* Tell Tailwind where your templates are (v4) */
+@source "./app/**/*.{js,ts,jsx,tsx,mdx}" "./pages/**/*.{js,ts,jsx,tsx,mdx}" "./components/**/*.{js,ts,jsx,tsx,mdx}" "./src/**/*.{js,ts,jsx,tsx,mdx}";
+
+/* ========================
+   BASE VARIABLES
+======================== */
+:root {
+  /* Core */
+  --background: 0 0% 99%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  /* Brand */
+  --primary: 0 84% 60%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 23 98% 54%;
+  --accent-foreground: 0 0% 100%;
+
+  /* UI */
+  --secondary: 216 100% 97%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 214 32% 91%;
+  --muted-foreground: 215 16% 47%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 0 84% 60%;
+
+  /* Layout helpers */
+  --header: 0 0% 0%;
+  --footer: 222 47% 11%;
+  --radius: 0.75rem;
+
+  /* Hero/Footer navy */
+  --hero-navy: 215 64% 12%; /* ~ #0a1a2f */
+}
+
+.dark {
+  --background: 222 47% 6%;
+  --foreground: 210 40% 98%;
+
+  --card: 222 47% 9%;
+  --card-foreground: 210 40% 98%;
+
+  --secondary: 220 12% 18%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 220 12% 18%;
+  --muted-foreground: 215 20% 65%;
+
+  --primary: 0 84% 60%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 23 98% 54%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 72% 45%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 220 14% 22%;
+  --input: 220 14% 22%;
+  --ring: 0 84% 60%;
+
+  --header: 0 0% 0%;
+  --footer: 222 47% 9%;
+}
+
+/* ========================
+   BASE STYLES
+======================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  border-color: hsl(var(--border));
+}
+
+/* Improve layout stability and avoid unexpected shifts from fonts/images */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+  /* prefer-reduced-motion will override animations below */
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings keep responsive scale (unchanged for desktop) */
+h1 {
+  font-weight: 800;              /* font-extrabold */
+  letter-spacing: -0.025em;      /* tracking-tight */
+  font-size: clamp(2rem, 6vw, 4rem);
+}
+h2 {
+  font-weight: 700;              /* font-bold */
+  letter-spacing: -0.015em;      /* similar to tracking-tight */
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+}
+h3 {
+  font-weight: 600;              /* font-semibold */
+  font-size: clamp(1.25rem, 2.8vw, 1.5rem);
+}
+
+/* Ensure images that have only one dimension modified keep aspect ratio to avoid CLS warnings.
+   If you intentionally change width/height via CSS, pair with height:auto or width:auto as needed. */
+img, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;    /* keeps aspect ratio */
+  width: auto;     /* allows element to scale naturally if only one dimension is set in markup */
+}
+
+/* ========================
+   UTILITIES
+======================== */
+.ig-gradient { background-image: none !important; }
+
+.shadow-ig {
+  box-shadow: 0 20px 50px -10px rgba(0,0,0,0.25);
+}
+
+/* Keep focus ring accessible but inexpensive on mobile */
+.ring-ig:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.6);
+}
+
+/* Container helper similar to `mx-auto max-w-7xl px-6` */
+.container-app {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem; /* ~max-w-7xl */
+  padding-left: 1.5rem;  /* px-6 */
+  padding-right: 1.5rem;
+}
+
+/* ========================
+   COMPONENTS
+======================== */
+
+/* Hero band — solid dark navy, white text */
+.hero-band {
+  color: #fff !important;
+  background: hsl(var(--hero-navy)) !important;
+  border-radius: 1rem;           /* rounded-2xl-ish */
+  padding: 1.5rem;               /* base p-6 */
+  box-shadow: 0 25px 60px -20px rgba(0,0,0,0.25);
+}
+@media (min-width: 640px) { .hero-band { padding: 2.5rem; } } /* sm:p-10 */
+@media (min-width: 1024px) { .hero-band { padding: 3.5rem; } } /* lg:p-14 */
+
+/* Solid background for header */
+.header-bar {
+  background: #fff;      /* white background */
+  color: #000;           /* black text */
+}
+/* Navigation tabs — BLACK text + accent hover */
+.nav-link {
+  color: #000;                   /* text-black */
+  font-weight: 500;              /* font-medium */
+  transition: color .2s ease-in-out;
+}
+.nav-link:hover {
+  color: hsl(var(--accent));
+}
+
+/* Stat cards (white with navy text) */
+.stat {
+  background: #fff;
+  color: hsl(var(--hero-navy));
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+}
+.stat .value {
+  font-size: 1.875rem;           /* text-3xl */
+  line-height: 2.25rem;
+  font-weight: 800;
+}
+.stat .label {
+  margin-top: .25rem;
+  font-size: .75rem;
+  opacity: .8;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all .2s ease-in-out;
+}
+.btn-navy {
+  background: #fff;
+  color: hsl(var(--hero-navy));
+}
+.btn-navy:hover {
+  background: hsl(var(--hero-navy));
+  color: #fff;
+}
+.btn-secondary {
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+/* Floating icons of service page - heavy visuals, reduce on mobile */
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-40px) rotate(8deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+.floating-icon {
+  position: absolute;
+  font-size: 6rem;      /* big on desktop */
+  opacity: 0.05;        /* Soft watermark */
+  animation: float 10s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Staggered delays */
+.floating-icon:nth-child(2) { animation-delay: 2s; }
+.floating-icon:nth-child(3) { animation-delay: 4s; }
+.floating-icon:nth-child(4) { animation-delay: 6s; }
+.floating-icon:nth-child(5) { animation-delay: 8s; }
+.floating-icon:nth-child(6) { animation-delay: 10s; }
+
+/* Marquee animation (consolidated) */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+/* subtle pulse & bounce utilities */
+@keyframes pulse-slow {
+  0% { opacity: 0.12; transform: scale(1); }
+  50% { opacity: 0.22; transform: scale(1.06); }
+  100% { opacity: 0.12; transform: scale(1); }
+}
+.animate-pulse-slow { animation: pulse-slow 2.6s infinite; }
+
+@keyframes bounce-fast {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.animate-bounce-fast { animation: bounce-fast 0.7s infinite; }
+
+/* ========================
+   PERFORMANCE & MOBILE TWEAKS
+   (these keep desktop identical while cutting mobile cost)
+======================== */
+
+/* Reduce/disable heavy animations if user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-pulse-slow,
+  .animate-bounce-fast,
+  .floating-icon {
+    animation: none !important;
+  }
+}
+
+/* On small screens, disable marquee and tone down floating icons to reduce repaints */
+@media (max-width: 640px) {
+  .animate-marquee {
+    animation: none;
+  }
+
+  .floating-icon {
+    font-size: 3.2rem;    /* reduce size on mobile */
+    opacity: 0.02;
+    animation-duration: 18s;
+    will-change: auto;    /* avoid forcing compositor layers on small devices */
+  }
+
+  /* reduce expensive shadows on mobile to improve paint performance */
+  .shadow-ig {
+    box-shadow: 0 6px 18px -6px rgba(0,0,0,0.18);
+  }
+
+  .hero-band {
+    padding: 1rem;
+    box-shadow: 0 10px 30px -12px rgba(0,0,0,0.18);
+  }
+
+  /* reduce heading sizes slightly on small screens to improve layout stability */
+  h1 { font-size: clamp(1.6rem, 7vw, 2.6rem); }
+  h2 { font-size: clamp(1.25rem, 4vw, 1.8rem); }
+}
+
+/* Limit will-change usage to desktop only (improves mobile perf) */
+@media (max-width: 1024px) {
+  .animate-marquee, .floating-icon { will-change: auto; }
+}
+
+/* Accessibility: make focus outlines visible for keyboard users but unobtrusive on touch */
+:focus { outline-offset: 2px; }
+
+/* Small utility to hide decorative elements from assistive tech */
+[aria-hidden="true"] { pointer-events: none; }
+
+/* Small helpers for form controls to look good on dark backgrounds */
+input, textarea, select {
+  background: rgba(255,255,255,0.04);
+  color: inherit;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* End of globals.css adjustments */

@@ -1,0 +1,38 @@
+{
+  "title": "The Next Funnel — Services",
+  "services": [
+    "Social media management",
+    "Meta / Facebook & Instagram ads",
+    "Instagram DM automation",
+    "Email marketing",
+    "Branding & design",
+    "Video editing",
+    "Landing page & funnel setup",
+    "Free audit / consulting"
+  ],
+  "blurb": "We provide social media management, Meta ads (Facebook & Instagram), Instagram DM automation, email marketing, branding & design, video editing, landing pages & funnels, and free audit/consulting.",
+  "packages": [
+    {
+      "id": "starter",
+      "title": "Starter Growth",
+      "price_usd": "299/mo",
+      "summary": "Basic social posting + monthly performance report. Great to start growing presence."
+    },
+    {
+      "id": "growth",
+      "title": "Performance Growth",
+      "price_usd": "599/mo",
+      "summary": "Social posting, ad creative & campaign management (Meta), and basic automation."
+    },
+    {
+      "id": "premium",
+      "title": "Automation Growth",
+      "price_usd": "2499/mo",
+      "summary": "Full-service social, advanced ads, DM automation, email funnels, and Web Development"
+    }
+  ],
+  "contact": {
+    "email": "thenextfunnel@gmail.com",
+    "cta": "For exact pricing & a tailored plan, request a free audit."
+  }
+}
