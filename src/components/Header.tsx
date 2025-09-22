@@ -27,13 +27,13 @@ export default function Header() {
       <div className="mx-auto max-w-7xl px-5 md:px-10 py-4 md:py-7 flex items-center justify-between">
         <Link href="/" className="flex items-center" aria-label="The Next Funnel - Home">
           <Image
-            src="/images/1.webp"
-            alt="The Next Funnel Logo"
-            width={140}
-            height={48}
-            sizes="(max-width: 640px) 120px, 160px"
-            priority={false}
-            className="block"
+             src="/images/1.webp"
+  alt="The Next Funnel Logo"
+  width={200}   // increased width
+  height={70}   // increased height
+  sizes="(max-width: 640px) 160px, 200px"
+  priority={false}
+  className="block"
           />
         </Link>
 

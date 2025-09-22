@@ -8,17 +8,18 @@ export const metadata: Metadata = {
 
 export default function IGAutomationPage() {
   return (
-    // ⬇️ only change earlier (py-20 -> pt-8 md:pt-12 pb-16) — kept as you set
+    // adjusted paddings for mobile/desktop
     <main className="pt-8 md:pt-12 pb-16 text-white bg-gradient-to-r from-[#0a1a2f] via-[#0d2140] to-[#1a3b6b]">
-      <div className="container mx-auto px-1 max-w-6xl">
+      <div className="container mx-auto px-4 max-w-6xl">
         {/* Hero */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* Left: copy */}
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-5 bg-white text-transparent bg-clip-text leading-tight pb-1">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 sm:mb-5 bg-white text-transparent bg-clip-text leading-tight">
               Instagram Automation
             </h1>
-            <p className="text-lg text-gray-200 leading-relaxed">
+
+            <p className="text-base sm:text-lg text-gray-200 leading-relaxed">
               Turn DMs into revenue with keyword triggers, quick replies, and automated
               funnels that capture, qualify, and nurture leads—24/7. We set it up.
               You watch conversations convert.
@@ -42,73 +43,75 @@ export default function IGAutomationPage() {
           </div>
 
           {/* Right: Instagram-like phone DM preview */}
-          <div className="mx-auto w-full max-w-sm">
+          <div className="mx-auto w-full max-w-sm sm:max-w-xs lg:max-w-md">
             {/* Phone shell */}
-            <div className="rounded-[2rem] p-3 bg-white/10 backdrop-blur-md border border-white/10 shadow-2xl">
-              <div className="rounded-[1.7rem] bg-black/90 h-[620px] flex flex-col overflow-hidden">
+            <div className="rounded-2xl p-3 bg-white/8 backdrop-blur-md border border-white/8 shadow-2xl">
+              {/* Phone inner */}
+              <div className="rounded-[1.3rem] bg-black/95 md:h-[620px] h-[520px] flex flex-col overflow-hidden">
                 {/* Top bar (IG style) */}
-                <div className="relative flex items-center gap-3 px-2 py-3 border-b border-white/10">
-                  <div className="h-7 w-16 bg-white/10 rounded-full mx-auto absolute left-1/2 -translate-x-1/2" />
+                <div className="relative flex items-center gap-3 px-3 py-3 border-b border-white/8">
+                  <div className="absolute left-1/2 -translate-x-1/2 w-14 h-6 bg-white/6 rounded-full" />
                   <img
                     src="/images/logo2.png"
                     alt="User"
                     className="h-8 w-8 rounded-full border border-white/10 object-cover"
                   />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-1">
-                      <p className="font-semibold text-sm">thenextfunnel</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-sm truncate">thenextfunnel</p>
                     </div>
                     <p className="text-[11px] text-gray-400 -mt-0.5">Active now</p>
                   </div>
                   {/* top icons */}
                   <div className="flex items-center gap-3">
                     {/* call */}
-                    <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
                       <path strokeWidth="2" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012 4.18 2 2 0 014 2h3a2 2 0 012 1.72c.12.86.31 1.7.57 2.5a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.58-1.63a2 2 0 012.11-.45c.8.26 1.64.45 2.5.57A2 2 0 0122 16.92z" />
                     </svg>
                     {/* info */}
-                    <svg className="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                    <svg className="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
                       <path fillRule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zM9 9a1 1 0 012 0v5a1 1 0 11-2 0V9zm1-4a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clipRule="evenodd" />
                     </svg>
                   </div>
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 px-3 py-3 overflow-y-auto space-y-2">
+                <div className="flex-1 px-3 py-3 overflow-y-auto space-y-3">
                   {/* date marker */}
                   <div className="flex justify-center">
-                    <span className="text-[10px] text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] text-gray-500 bg-white/6 px-2 py-0.5 rounded-full">
                       Today • 10:24 AM
                     </span>
                   </div>
 
                   {/* inbound */}
-                  <div className="max-w-[78%] rounded-2xl px-3.5 py-2 text-[13px] text-gray-100 bg-[#262626]">
+                  <div className="max-w-[85%] md:max-w-[78%] rounded-2xl px-3.5 py-2 text-[13px] text-gray-100 bg-[#262626]">
                     Hi! What's the price of your logo package?
                   </div>
 
                   {/* outbound */}
                   <div className="flex justify-end">
-                    <div className="max-w-[78%] rounded-2xl px-3.5 py-2 text-[13px] text-white bg-[#833AB4]">
-                      Hey there! 0ur logo package starts from $199.
-                      Want examples or a quick call?
+                    <div className="max-w-[85%] md:max-w-[78%] rounded-2xl px-3.5 py-2 text-[13px] text-white bg-gradient-to-r from-[#7b1fa2] to-[#c24bff]">
+                      <div className="leading-relaxed">
+                        Hey there! Our logo package starts from $199. Want examples or a quick call?
+                      </div>
                       <div className="mt-2 flex gap-2">
-                        <span className="inline-block rounded-full bg-white/20 px-2 py-1 text-[11px]">See Samples</span>
-                        <span className="inline-block rounded-full bg-white/20 px-2 py-1 text-[11px]">Book Call</span>
+                        <span className="inline-block rounded-full bg-white/12 px-2 py-1 text-[11px]">See Samples</span>
+                        <span className="inline-block rounded-full bg-white/12 px-2 py-1 text-[11px]">Book Call</span>
                       </div>
                     </div>
                   </div>
 
                   {/* inbound keyword */}
-                  <div className="max-w-[78%] rounded-2xl px-3.5 py-2 text-[13px] text-gray-100 bg-[#262626]">
+                  <div className="max-w-[80%] rounded-2xl px-3.5 py-2 text-[13px] text-gray-100 bg-[#262626]">
                     Sample Please !!
                   </div>
 
                   {/* outbound with media thumbs */}
                   <div className="flex justify-end">
-                    <div className="max-w-[78%] rounded-2xl px-3.5 py-2 text-[13px] text-white bg-[#833AB4]">
-                      Here are a few samples. Want a free brand audit?
-                      <div className="mt-2 grid grid-cols-3 gap-1">
+                    <div className="max-w-[85%] md:max-w-[78%] rounded-2xl px-3.5 py-2 text-[13px] text-white bg-gradient-to-r from-[#7b1fa2] to-[#c24bff]">
+                      <div>Here are a few samples. Want a free brand audit?</div>
+                      <div className="mt-2 grid grid-cols-3 gap-2">
                         <div className="h-14 rounded-md bg-white/25" />
                         <div className="h-14 rounded-md bg-white/25" />
                         <div className="h-14 rounded-md bg-white/25" />
@@ -118,23 +121,27 @@ export default function IGAutomationPage() {
 
                   {/* typing indicator */}
                   <div className="flex items-center gap-2 text-[11px] text-gray-500 mt-1">
-                    <span className="inline-flex gap-1">
+                    <span className="inline-flex gap-1 items-center">
                       <span className="h-1.5 w-1.5 rounded-full bg-gray-500 animate-bounce [animation-delay:-0.2s]" />
                       <span className="h-1.5 w-1.5 rounded-full bg-gray-500 animate-bounce [animation-delay:-0.1s]" />
                       <span className="h-1.5 w-1.5 rounded-full bg-gray-500 animate-bounce" />
                     </span>
-                    typing…
+                    <span>typing…</span>
                   </div>
                 </div>
 
                 {/* Input bar */}
                 <div className="px-3 pb-3">
-                  <div className="flex items-center gap-2 rounded-2xl bg-[#121212] border border-white/10 px-3 py-2">
-                    <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <div className="flex items-center gap-2 rounded-2xl bg-[#0b0b0b] border border-white/8 px-3 py-2">
+                    <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
                       <path strokeWidth="2" d="M12 5v14M5 12h14" />
                     </svg>
-                    <div className="flex-1 text-[13px] text-gray-400">Message...</div>
-                    <svg className="h-5 w-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <input
+                      aria-label="Message"
+                      placeholder="Message..."
+                      className="flex-1 bg-transparent text-[13px] text-gray-300 placeholder-gray-500 outline-none"
+                    />
+                    <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
                       <path strokeWidth="2" d="M12 14a3 3 0 003-3V6a3 3 0 10-6 0v5a3 3 0 003 3z" />
                       <path strokeWidth="2" d="M19 11a7 7 0 01-14 0M12 18v4" />
                     </svg>
@@ -143,7 +150,7 @@ export default function IGAutomationPage() {
                         aria-label="Send"
                         className="flex items-center justify-center h-8 w-8 rounded-full bg-black text-white"
                       >
-                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
                         </svg>
                       </button>

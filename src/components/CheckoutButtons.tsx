@@ -1,8 +1,8 @@
-﻿// src/app/pricing/ClientPayModal.tsx
+// src/app/pricing/ClientPayModal.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
-import CheckoutButtons from "../../components/CheckoutButtons";
+import CheckoutButtons from "@/components/CheckoutButtons";
 
 type Props = {
   planId: string;
@@ -26,7 +26,15 @@ export default function ClientPayModal({
 
   return (
     <div className="w-full">
-      {/* Modal will only show if `open` is true */}
+      {/* Visible trigger button */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="w-full px-4 py-2 rounded-full bg-white text-black font-semibold"
+      >
+        Purchase plan
+      </button>
+
       {open && (
         <div
           role="dialog"
@@ -50,7 +58,6 @@ export default function ClientPayModal({
             </header>
 
             <div className="space-y-4">
-              {/* ✅ Use unified buttons */}
               <CheckoutButtons
                 planId={planId}
                 usdAmount={usdAmount}
