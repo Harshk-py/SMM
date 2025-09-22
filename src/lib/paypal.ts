@@ -12,6 +12,36 @@ function assertEnv(name: string): string {
 }
 
 /**
+ * Resolve a URL that may be absolute or relative.
+ * Relative URLs are resolved using NEXT_PUBLIC_BASE_URL, SITE_URL, or VERCEL_URL.
+ * Throws a helpful error if it cannot produce an absolute URL.
+ */
+function resolveAbsoluteUrl(urlOrPath: string): string {
+  if (!urlOrPath) throw new Error("Empty URL provided");
+
+  // already absolute
+  if (/^https?:\/\//i.test(urlOrPath)) return urlOrPath;
+
+  // prefer explicit public base
+  const envBase = (process.env.NEXT_PUBLIC_BASE_URL || process.env.SITE_URL || "").replace(/\/$/, "");
+  if (envBase) {
+    return `${envBase}${urlOrPath.startsWith("/") ? urlOrPath : "/" + urlOrPath}`;
+  }
+
+  // Vercel sets VERCEL_URL (like my-app.vercel.app) at build/runtime — assume https
+  const vercel = process.env.VERCEL_URL;
+  if (vercel) {
+    const base = `https://${vercel.replace(/\/$/, "")}`;
+    return `${base}${urlOrPath.startsWith("/") ? urlOrPath : "/" + urlOrPath}`;
+  }
+
+  // helpful error for developers
+  throw new Error(
+    `Cannot resolve relative URL "${urlOrPath}". Please provide an absolute URL, or set NEXT_PUBLIC_BASE_URL, SITE_URL, or ensure VERCEL_URL is available in the environment.`
+  );
+}
+
+/**
  * Get OAuth2 access token from PayPal. Caller should handle exceptions.
  */
 export async function getAccessToken(): Promise<string> {
@@ -45,7 +75,7 @@ export async function getAccessToken(): Promise<string> {
  * opts:
  * - amount: string like "599.00"
  * - currency: "USD" or other supported currency
- * - returnUrl / cancelUrl: absolute URLs
+ * - returnUrl / cancelUrl: absolute URLs OR relative paths (e.g. "/checkout/cancel")
  * - customId?: optional string stored on purchase_units[0].custom_id (useful to store planId)
  *
  * Returns: raw PayPal order JSON on success.
@@ -63,6 +93,10 @@ export async function createOrderServerSide(opts: {
 
   const token = await getAccessToken();
 
+  // Resolve relative return/cancel URLs to absolute
+  const returnUrl = resolveAbsoluteUrl(opts.returnUrl);
+  const cancelUrl = resolveAbsoluteUrl(opts.cancelUrl);
+
   const body = {
     intent: "CAPTURE",
     purchase_units: [
@@ -74,8 +108,8 @@ export async function createOrderServerSide(opts: {
       },
     ],
     application_context: {
-      return_url: opts.returnUrl,
-      cancel_url: opts.cancelUrl,
+      return_url: returnUrl,
+      cancel_url: cancelUrl,
     },
   };
 
