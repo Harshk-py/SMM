@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "The Next Funnel is a Social Media Marketing agency specializing in social media management, Meta ads, content creation, and automation.",
   icons: {
-    icon: "/images/logo.png",
+    icon: "/images/favicon.png",
   },
 };
 
