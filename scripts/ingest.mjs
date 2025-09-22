@@ -1,4 +1,4 @@
-
+// scripts/ingest.mjs
 import { load } from "cheerio";
 import { Client } from "pg";
 import dotenv from "dotenv";
@@ -7,8 +7,15 @@ import process from "process";
 dotenv.config();
 
 // ---------- config ----------
-const SITE_URL = process.env.SITE_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:3000";
-const PAGES = (process.env.PAGES ?? "/,/pricing,/free-audit,/contact").split(",").map(p => p.trim()).filter(Boolean);
+// prefer NEXT_PUBLIC_BASE_URL (useful for Vercel), then SITE_URL, otherwise default to empty string
+const envUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.SITE_URL || "";
+export const SITE_URL = envUrl.replace(/\/$/, "") || ""; // "" means use relative paths
+
+const PAGES = (process.env.PAGES ?? "/,/pricing,/free-audit,/contact")
+  .split(",")
+  .map((p) => p.trim())
+  .filter(Boolean);
+
 const OPENAI_KEY = process.env.OPENAI_API_KEY ?? null;
 const PG_CONN = process.env.PG_CONNECTION ?? process.env.DATABASE_URL ?? null;
 const EMBEDDING_MODEL = "text-embedding-3-small";
@@ -16,11 +23,19 @@ const EMBEDDING_DIM = 1536; // for text-embedding-3-small
 // ----------------------------
 
 // small helpers
-function now() { return new Date().toISOString(); }
+function now() {
+  return new Date().toISOString();
+}
 
-function log(...args) { console.log(now(), ...args); }
-function warn(...args) { console.warn(now(), "WARN:", ...args); }
-function error(...args) { console.error(now(), "ERROR:", ...args); }
+function log(...args) {
+  console.log(now(), ...args);
+}
+function warn(...args) {
+  console.warn(now(), "WARN:", ...args);
+}
+function error(...args) {
+  console.error(now(), "ERROR:", ...args);
+}
 
 if (!PG_CONN) {
   error("No Postgres connection string found. Set PG_CONNECTION or DATABASE_URL in your .env");
@@ -35,7 +50,8 @@ await pg.connect();
 log("Connected to Postgres.");
 
 // Ensure documents table exists (best-effort)
-await pg.query(`
+await pg
+  .query(`
 CREATE TABLE IF NOT EXISTS documents (
   id bigserial PRIMARY KEY,
   url text NOT NULL UNIQUE,
@@ -44,10 +60,14 @@ CREATE TABLE IF NOT EXISTS documents (
   created_at timestamptz DEFAULT now(),
   embedding vector(${EMBEDDING_DIM})
 );
-`).catch(err => {
-  // if vector extension not present, tell user but continue (we'll still insert rows without embeddings)
-  warn("Could not ensure documents table or vector column. If vector extension missing, you can still insert content but embeddings will fail on insert. Details:", err.message);
-});
+`)
+  .catch((err) => {
+    // if vector extension not present, tell user but continue (we'll still insert rows without embeddings)
+    warn(
+      "Could not ensure documents table or vector column. If vector extension missing, you can still insert content but embeddings will fail on insert. Details:",
+      err.message
+    );
+  });
 
 // Retry helper for transient errors (429 etc)
 async function retryWithBackoff(fn, { retries = 5, baseMs = 800 } = {}) {
@@ -63,21 +83,21 @@ async function retryWithBackoff(fn, { retries = 5, baseMs = 800 } = {}) {
       if (attempt > retries) throw err;
       const waitMs = Math.round(baseMs * Math.pow(2, attempt - 1) + Math.random() * 300);
       warn(`Attempt ${attempt} failed${status ? ` (status ${status})` : ""}. Retrying in ${waitMs}ms — ${err?.message ?? err}`);
-      await new Promise(res => setTimeout(res, waitMs));
+      await new Promise((res) => setTimeout(res, waitMs));
     }
   }
 }
 
 async function fetchPage(path) {
-  const url = path.startsWith("http") ? path : (SITE_URL + (path.startsWith("/") ? path : "/" + path));
-  log("Fetching", url);
-  const res = await fetch(url, { headers: { "User-Agent": "nextfunnel-ingest/1.0" } });
+  const url = path.startsWith("http") ? path : SITE_URL + (path.startsWith("/") ? path : "/" + path);
+  log("Fetching", url || "(relative) " + path);
+  const res = await fetch(url || path, { headers: { "User-Agent": "nextfunnel-ingest/1.0" } });
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`HTTP ${res.status} ${res.statusText} - ${text.slice(0, 200)}`);
   }
   const html = await res.text();
-  return { url, html };
+  return { url: url || path, html };
 }
 
 function extractTextAndTitle(html, url) {
@@ -134,7 +154,7 @@ async function createEmbedding(text) {
 async function saveDocument({ url, title, content, embedding }) {
   // embedding: if provided, pass it as a string like '[0.1,0.2,...]' and cast to vector.
   if (embedding && Array.isArray(embedding)) {
-    const embStr = `[${embedding.map(x => Number(x).toFixed(8)).join(",")}]`;
+    const embStr = `[${embedding.map((x) => Number(x).toFixed(8)).join(",")}]`;
     // Upsert
     const q = `
       INSERT INTO documents (url, title, content, embedding)
@@ -165,7 +185,7 @@ async function saveDocument({ url, title, content, embedding }) {
 }
 
 async function main() {
-  log("Starting ingest for", PAGES.length, "pages from", SITE_URL);
+  log("Starting ingest for", PAGES.length, "pages from", SITE_URL || "(relative)");
   let count = 0;
   for (const path of PAGES) {
     try {
