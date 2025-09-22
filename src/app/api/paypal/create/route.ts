@@ -31,6 +31,24 @@ type BodyShape = {
   amount?: string | number;
 };
 
+/** Resolve an absolute base URL for the app.
+ *  Order of precedence:
+ *   1. NEXT_PUBLIC_BASE_URL (recommended)
+ *   2. SITE_URL
+ *   3. VERCEL_URL (provided by Vercel) — prefixed with https://
+ */
+function resolveBaseUrl(): string {
+  const envBase = (process.env.NEXT_PUBLIC_BASE_URL || process.env.SITE_URL || "").replace(/\/$/, "");
+  if (envBase) return envBase;
+  const vercel = process.env.VERCEL_URL;
+  if (vercel) {
+    return `https://${vercel.replace(/\/$/, "")}`;
+  }
+  throw new Error(
+    "No base URL configured. Set NEXT_PUBLIC_BASE_URL or SITE_URL in Vercel (or ensure VERCEL_URL is available)."
+  );
+}
+
 export async function POST(req: Request) {
   try {
     const body = (await req.json().catch(() => ({}))) as BodyShape;
@@ -68,16 +86,20 @@ export async function POST(req: Request) {
 
     const amountStr = Number(amountForPayPal).toFixed(2);
 
-    // Build return and cancel paths as RELATIVE paths.
-    // createOrderServerSide will resolve them to absolute URLs using NEXT_PUBLIC_BASE_URL, SITE_URL, or VERCEL_URL.
-    const returnPath = `/checkout/success?plan=${encodeURIComponent(planId)}&currency=${encodeURIComponent(currency)}`;
-    const cancelPath = `/checkout/cancel?plan=${encodeURIComponent(planId)}&currency=${encodeURIComponent(currency)}`;
+    // Resolve base URL and build absolute return/cancel URLs
+    const baseUrl = resolveBaseUrl(); // will throw a helpful error if none
+    const returnUrl = `${baseUrl}/checkout/success?plan=${encodeURIComponent(
+      planId
+    )}&currency=${encodeURIComponent(currency)}`;
+    const cancelUrl = `${baseUrl}/checkout/cancel?plan=${encodeURIComponent(
+      planId
+    )}&currency=${encodeURIComponent(currency)}`;
 
     const order = await createOrderServerSide({
       amount: amountStr,
       currency,
-      returnUrl: returnPath,
-      cancelUrl: cancelPath,
+      returnUrl,
+      cancelUrl,
       customId: planId,
     } as any);
 
