@@ -31,9 +31,6 @@ type BodyShape = {
   amount?: string | number;
 };
 
-// ⚡ Hardcode dev origin to port 3001
-const ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
-
 export async function POST(req: Request) {
   try {
     const body = (await req.json().catch(() => ({}))) as BodyShape;
@@ -71,15 +68,16 @@ export async function POST(req: Request) {
 
     const amountStr = Number(amountForPayPal).toFixed(2);
 
-    // Build return and cancel URLs always on port 3001
-    const returnUrl = `${ORIGIN}/checkout/success?plan=${encodeURIComponent(planId)}&currency=${encodeURIComponent(currency)}`;
-    const cancelUrl = `${ORIGIN}/checkout/cancel?plan=${encodeURIComponent(planId)}&currency=${encodeURIComponent(currency)}`;
+    // Build return and cancel paths as RELATIVE paths.
+    // createOrderServerSide will resolve them to absolute URLs using NEXT_PUBLIC_BASE_URL, SITE_URL, or VERCEL_URL.
+    const returnPath = `/checkout/success?plan=${encodeURIComponent(planId)}&currency=${encodeURIComponent(currency)}`;
+    const cancelPath = `/checkout/cancel?plan=${encodeURIComponent(planId)}&currency=${encodeURIComponent(currency)}`;
 
     const order = await createOrderServerSide({
       amount: amountStr,
       currency,
-      returnUrl,
-      cancelUrl,
+      returnUrl: returnPath,
+      cancelUrl: cancelPath,
       customId: planId,
     } as any);
 
