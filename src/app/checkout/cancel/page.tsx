@@ -1,18 +1,22 @@
 // src/app/checkout/cancel/page.tsx
-export const metadata = {
+import type { Metadata } from "next";
+import loadDynamic from "next/dynamic";
+
+// ensure Next doesn't try to statically prerender this route
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
   title: "Checkout Cancelled - The Next Funnel",
-  description: "Your payment was cancelled on PayPal.",
+  description: "Your payment was cancelled on PayPal. Return to pricing or continue browsing The Next Funnel.",
 };
 
-// Temporary safe static page — avoids any client/server imports during build
-export default function TempCancelPage() {
+// load the client component only in the browser
+const CancelClient = loadDynamic(() => import("./CancelClient"), { ssr: false });
+
+export default function CheckoutCancelPage() {
   return (
     <main style={{ padding: 24, fontFamily: "Inter, system-ui, sans-serif" }}>
-      <h1>Payment Cancelled</h1>
-      <p>This is a temporary page to allow the site to deploy. The full cancel UI will be restored after debugging.</p>
-      <p>
-        <a href="/pricing">Return to pricing</a>
-      </p>
+      <CancelClient />
     </main>
   );
 }
