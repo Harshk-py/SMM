@@ -15,19 +15,19 @@
     {
       "id": "starter",
       "title": "Starter Growth",
-      "price_usd": "299/mo",
+      "price_usd": "99/mo",
       "summary": "Basic social posting + monthly performance report. Great to start growing presence."
     },
     {
       "id": "growth",
       "title": "Performance Growth",
-      "price_usd": "599/mo",
+      "price_usd": "199/mo",
       "summary": "Social posting, ad creative & campaign management (Meta), and basic automation."
     },
     {
       "id": "premium",
       "title": "Automation Growth",
-      "price_usd": "2499/mo",
+      "price_usd": "599/mo",
       "summary": "Full-service social, advanced ads, DM automation, email funnels, and Web Development"
     }
   ],

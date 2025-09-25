@@ -27,7 +27,6 @@ async function sendNotificationEmail({
   const recipient = getEnv("CONTACT_RECIPIENT");
 
   if (!host || !user || !pass || !recipient) {
-    // SMTP not configured — skip sending but do not throw
     console.warn("SMTP not configured, skipping notification email");
     return;
   }
@@ -42,11 +41,11 @@ async function sendNotificationEmail({
     auth: { user, pass },
   });
 
-  const subject = `New contact message${planId ? ` — plan: ${planId}` : ""}`;
+  const subject = `New contact message${planId ? ` — inquiry: ${planId}` : ""}`;
   const html = `
     <p><strong>Name:</strong> ${escapeHtml(name)}</p>
     <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-    ${planId ? `<p><strong>Plan:</strong> ${escapeHtml(planId)}</p>` : ""}
+    ${planId ? `<p><strong>Inquiry:</strong> ${escapeHtml(planId)}</p>` : ""}
     <p><strong>Message:</strong></p>
     <pre style="white-space:pre-wrap">${escapeHtml(message)}</pre>
   `;
@@ -59,7 +58,7 @@ async function sendNotificationEmail({
   });
 }
 
-/** very small html escaper to avoid malformed markup in emails */
+/** very small html escaper */
 function escapeHtml(str: string) {
   return str
     .replaceAll("&", "&amp;")
@@ -75,42 +74,48 @@ export async function POST(req: Request) {
     const name = (body.name ?? "").toString().trim();
     const email = (body.email ?? "").toString().trim();
     const message = (body.message ?? "").toString().trim();
-    const planId = body.planId ? String(body.planId) : null;
+
+    // accept either planId or inquiryType from frontend
+    const planIdRaw = body.planId ?? body.inquiryType ?? null;
+    const planId = planIdRaw ? String(planIdRaw).trim() : null;
 
     if (!name || !email || !message) {
-      return NextResponse.json({ error: "name, email and message are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "name, email and message are required" },
+        { status: 400 }
+      );
     }
 
-    // simple email validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: "invalid email address" }, { status: 400 });
+      return NextResponse.json(
+        { error: "invalid email address" },
+        { status: 400 }
+      );
     }
 
-    // Save to DB (if prisma available)
+    // Save to DB
     let saved: any = null;
     try {
-      if (!prisma) {
-        console.warn("Prisma client not available, skipping DB save");
-      } else {
-        saved = await prisma.contactMessage.create({
-          data: { name, email, message, planId },
-        });
-      }
+      saved = await prisma.contactMessage.create({
+        data: { name, email, message, planId },
+      });
     } catch (dbErr: any) {
       console.error("Prisma save failed:", dbErr);
-      // continue — still try to send email (or return partial success)
     }
 
-    // Send notification email (best-effort)
+    // Send notification email
     try {
       await sendNotificationEmail({ name, email, message, planId });
     } catch (emailErr: any) {
       console.warn("Email notification failed:", emailErr);
     }
 
-    return NextResponse.json({ ok: true, id: saved?.id ?? null });
+    return NextResponse.json({ ok: true, message: "Saved", saved });
   } catch (err: any) {
     console.error("Contact API error:", err);
-    return NextResponse.json({ error: err?.message ?? "internal error" }, { status: 500 });
+    return NextResponse.json(
+      { error: err?.message ?? "internal error" },
+      { status: 500 }
+    );
   }
 }

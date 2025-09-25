@@ -46,11 +46,11 @@ function CheckIcon({ className = "w-4 h-4 flex-none" }: { className?: string }) 
 const PLANS = [
   {
     id: "starter",
-    name: "Starter Growth",
-    usd: 299,
+    name: "Starter Boost",
+    usd: 99,
     bullets: [
       "12–15 Social Media Posts (Static + Carousels)",
-      "Basic Video Editing (5 Reels/Shorts)",
+      "Basic Video Editing (5 Reels)",
       "Monthly Content Calendar",
       "Instagram Page Optimization",
       "Only Instagram",
@@ -58,11 +58,12 @@ const PLANS = [
   },
   {
     id: "performance",
-    name: "Performance Growth",
-    usd: 599,
+    name: "Performance Pro",
+    usd: 199,
     bullets: [
-      "20–25 Posts + Reels/Shorts (Full content creation)",
-      "Advanced Video Editing",
+      "FREE Logo Designing",
+      "20–25 Posts (Static + Carousels)",
+      "Advanced Video Editing (10 Reels/Shorts) ",
       "Meta Ads Management",
       "Analytics & Growth Reports",
       "Only Instagram, Facebook and Youtube",
@@ -71,10 +72,10 @@ const PLANS = [
   {
     id: "premium",
     name: "Premium Growth",
-    usd: 2499,
+    usd: 599,
     bullets: [
-      "Performance Growth Included",
-      "Full Content Creation & Paid Ads Management",
+      "Performance Pro Plan Included",
+      "Instagram DM Automation",
       "Sales Funnels + Landing Pages (High-Converting)",
       "Email Marketing (Automated Nurture + Campaigns)",
       "Full Web Development + Lead Automation System",

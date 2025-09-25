@@ -198,7 +198,7 @@ export default function CheckoutButtonClient({
           ${rzLoading ? "opacity-70 cursor-wait" : ""}
           bg-blue-400 hover:brightness-90 text-[#111]`}
       >
-        {rzLoading ? "Processing…" : <span>Pay with Razorpay</span>}
+        {rzLoading ? "Processing…" : <span>Pay with Razorpay (CARDS/UPI)</span>}
       </button>
     </div>
   );

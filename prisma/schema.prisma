@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,9 +8,9 @@ datasource db {
 }
 
 /**
- * Clean, consistent starter schema for The Next Funnel
+ * Clean, consistent schema for The Next Funnel
  * - All primary keys use String + cuid()
- * - Relations are defined with matching opposite fields
+ * - Relations are defined clearly
  * - Models: ContactMessage, User, Plan, Order
  */
 
@@ -20,9 +19,12 @@ model ContactMessage {
   name      String
   email     String
   message   String   @db.Text
-  planId    String? // optional reference to plan slug or id
+  planId    String?  // optional reference to plan slug or id
   createdAt DateTime @default(now())
   processed Boolean  @default(false)
+
+  @@index([email])
+  @@index([planId])
 }
 
 model User {
@@ -48,8 +50,8 @@ model Plan {
 
 model Order {
   id         String   @id @default(cuid())
-  provider   String // "paypal" or "stripe"
-  providerId String? // PayPal orderId / Stripe paymentIntent id
+  provider   String   // "paypal" or "stripe"
+  providerId String?  // PayPal orderId / Stripe paymentIntent id
   amount     Float
   currency   String
   status     String
@@ -60,4 +62,7 @@ model Order {
   // relation fields
   plan Plan? @relation(fields: [planId], references: [id])
   user User? @relation(fields: [userId], references: [id])
+
+  @@index([planId])
+  @@index([userId])
 }

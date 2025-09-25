@@ -7,10 +7,9 @@ import { getExchangeRate } from "@/lib/currency";
  * Server-side canonical plan prices (USD). Always use server-side mapping.
  */
 const PLAN_PRICES_USD: Record<string, number> = {
-  starter: 299,
-  performance: 599,
-  premium: 2499,
-  automation: 999,
+  starter: 99,
+  performance: 199,
+  premium: 599,
 };
 
 const ALLOWED_CURRENCIES = new Set([

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.thenextfunnel.com/
+
+# Sitemaps
+Sitemap: https://www.thenextfunnel.com/sitemap.xml
